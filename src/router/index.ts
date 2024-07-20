@@ -37,10 +37,9 @@ const routes: RouteRecordRaw[] = [
         path: 'chat/:agent',
         name: 'AgentHome',
         components: {
-          default: () => import('@/views/chat/index.vue'),
+          default: () => import('@/views/chat/agentIndex.vue'),
           secondaryMenu: () => import('@/views/chat/components/ChatMenu/index.vue'),
         },
-        props: { default: true, secondaryMenu: true },
       },
       {
         path: 'chat/:agent/:chatId',
@@ -49,7 +48,6 @@ const routes: RouteRecordRaw[] = [
           default: () => import('@/views/chat/chat.vue'),
           secondaryMenu: () => import('@/views/chat/components/ChatMenu/index.vue'),
         },
-        props: { default: true, secondaryMenu: true },
       },
       {
         path: 'course',

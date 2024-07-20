@@ -2,8 +2,8 @@ import { get, post } from '@/utils/request'
 import type { Agent } from '@/typings/agentChat/Agent'
 import type { Message } from '@/api/typing'
 
-export function agentHello<T>(params: any) {
-  return get<T>({
+export function agentHello(params: any) {
+  return get<string>({
     url: '/agent/hello',
     data: params,
   },

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { NButton, NInput } from 'naive-ui'
-import { computed, ref } from 'vue'
+import { type Ref, computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 import { SvgIcon } from '@/components/common'
@@ -17,8 +17,8 @@ import { useAgentStore } from '@/store'
 
 const route = useRoute()
 const agentStore = useAgentStore()
-const agent = route.params.agent
-
+const agent: string = route.params.agent
+const chatId: string = route.params.chatId
 agentStore.agent = agent
 
 const loading = ref<boolean>(false)
@@ -33,7 +33,7 @@ const placeholder = computed(() => {
 const buttonDisabled = computed(() => {
   return loading.value || !prompt.value || prompt.value.trim() === ''
 })
-
+const inputRef = ref<Ref | null>(null)
 const agentHelloWords = ref<string>('')
 const agentIcon = ref<string>('')
 agentIcon.value = agentList.find((item: AgentPreview) => item.agent === agent)?.iconSrc || ''
@@ -202,7 +202,16 @@ async function onConversation() {
     console.log(error)
   }
 }
+onMounted(() => {
+  scrollToBottom()
+  if (inputRef.value && !isMobile.value)
+    inputRef.value?.focus()
+})
 
+onUnmounted(() => {
+  if (loading.value)
+    controller.abort()
+})
 async function handleStop() {
 
 }

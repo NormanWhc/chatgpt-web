@@ -8,7 +8,6 @@ const service = axios.create({
 service.interceptors.request.use(
   (config) => {
     const token = useAuthStore().token
-    config.headers.Authorization = '9d37d698-a96b-471c-b424-cf7dd6b5ef95'
     if (token)
       config.headers.Authorization = `${token}`
     return config

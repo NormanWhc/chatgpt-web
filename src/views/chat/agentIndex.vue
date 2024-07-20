@@ -9,10 +9,9 @@ import { toPng } from 'html-to-image'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { useUsingContext } from './hooks/useUsingContext'
-import HeaderComponent from './components/Header/index.vue'
 import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useAppStore, useChatStore } from '@/store'
+import { useAgentStore, useAppStore, useChatStore } from '@/store'
 import { fetchChatAPIProcess, fetchNewChatAPIProcess, newChat } from '@/api'
 import { t } from '@/locales'
 import { agentHello } from '@/api/agentChat'
@@ -52,8 +51,10 @@ const isDone = ref(false)
 //     updateChatSome(chatStore.active, index, { loading: false })
 // })
 const agentIcon = ref<string>('')
+const agentStore = useAgentStore()
 agentIcon.value = agentList.find((item: AgentPreview) => item.agent === agent)?.iconSrc || ''
-
+agentStore.agent = agent
+console.log(`agent${agent}`)
 async function handleSubmit() {
   // const activateAgent = chatStore.history.find(item => item.uuid === chatStore.active)
   // if (activateAgent?.isAgent) {
@@ -518,12 +519,6 @@ agentHello({ agent }).then((res) => {
 
 <template>
   <div class="flex flex-col w-full h-full">
-    <HeaderComponent
-      v-if="isMobile"
-      :using-context="usingContext"
-      @export="handleExport"
-      @handle-clear="handleClear"
-    />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
         <div
@@ -531,19 +526,17 @@ agentHello({ agent }).then((res) => {
           :class="[isMobile ? 'p-2' : 'p-4']"
         >
           <div id="image-wrapper" class="relative h-full">
-            <template>
-              <div class="flex h-full items-center justify-center mt-4 text-center text-neutral-300 flex-col">
-                <div class="flex justify-center w-full items-center">
-                  <img :src="agentIcon" alt="logo" />
-                  <div class="flex justify-center items-center flex-col" style="margin-left: 5%;">
-                    <!--                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">👋 你好，我是AI薯塔，</span> -->
-                    <!--                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">我可以告诉你最新的龙大资讯🙋</span> -->
-                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">{{ agenthello }}</span>
-                  </div>
+            <div class="flex h-full items-center justify-center mt-4 text-center text-neutral-300 flex-col">
+              <div class="flex justify-center w-full items-center">
+                <img :src="agentIcon" alt="logo" />
+                <div class="flex justify-center items-center flex-col" style="margin-left: 5%;">
+                  <!--                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">👋 你好，我是AI薯塔，</span> -->
+                  <!--                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">我可以告诉你最新的龙大资讯🙋</span> -->
+                  <span style="color: #1B2559;font-size: 28px;font-weight: bolder">{{ agenthello }}</span>
                 </div>
-                <AgentExampleQuestion />
               </div>
-            </template>
+              <AgentExampleQuestion />
+            </div>
           </div>
         </div>
       </div>

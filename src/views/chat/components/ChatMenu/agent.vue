@@ -54,7 +54,7 @@ function isActive(curAgent: string) {
 }
 
 function handleSelect(item: AgentPreview) {
-  router.push({ name: 'AgentHome', params: { agent: item.agent } })
+  router.push({ name: 'AgentHome', params: { agent: item.agent.toString() } })
 }
 </script>
 
