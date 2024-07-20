@@ -13,6 +13,7 @@ export interface CommentType {
   starCount: string
   isStared: boolean
   replyUserName?: string
+  isMyComment?: boolean
   commentVoList?: CommentType[]
 }
 interface Props {
@@ -93,7 +94,7 @@ const handleComment = async (type: string, comment: CommentType, commentContent 
       <div class="flex justify-between items-center mt-2 text-xs text-gray-400">
         <span class="text-gray-500">{{ comment.createTime }}</span>
         <div class="right flex items-center">
-          <button v-if="comment.isMyComment" class="flex items-center">
+          <button v-if="comment.isMyComment" class="flex items-center" @click="handleComment('commentDel', comment)">
             <n-icon size="large">
               <DeleteRound />
             </n-icon>
@@ -103,7 +104,7 @@ const handleComment = async (type: string, comment: CommentType, commentContent 
             <n-icon size="large">
               <ChatBubbleFilled />
             </n-icon>
-            <span class="text-nowrap">回复</span>
+            <span class="text-nowrap ml-0.5">回复</span>
           </button>
           <button class="ml-2">
             <div class="flex items-center">

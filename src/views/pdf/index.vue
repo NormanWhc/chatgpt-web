@@ -37,7 +37,7 @@ const sourceRef = ref<string>('')
 const name = ref('comment')
 const message = useMessage()
 const pdfStore = usePdfStore()
-const panels = ref([{ tab: 'AI chat', value: 'chat' }, { tab: '评论区', value: 'comment' }, { tab: 'my star', value: 'star' }])
+const panels = ref([{ tab: 'AI chat', value: 'chat' }, { tab: '评论区', value: 'comment' }])
 
 const pdfUrl = ref('') // pdf文件地址
 const fileUrl = '/pdfjs-4.4.168-dist/web/viewer.html?file=' // pdfjs文件地址
@@ -77,6 +77,13 @@ const getPdfInfo = async () => {
     console.error('error', error) // 使用 console.error 记录错误
   }
 }
+
+function formatUserName(userName) {
+  if (userName.length > 5)
+    return `${userName.slice(0, 4)}...`
+  else
+    return userName
+}
 const getComment = async (summaryResultVal: PageSummary[], page: number) => {
   try {
     const realPage = page - 1
@@ -88,6 +95,8 @@ const getComment = async (summaryResultVal: PageSummary[], page: number) => {
           const formattedCommentVoList = ele.commentVoList.map((comment) => {
             return {
               ...comment,
+              userName: formatUserName(comment.userName),
+              replyUserName: comment.replyUserName ? formatUserName(comment.replyUserName) : '',
               createTime: formatCommentTime(comment.createTime),
             }
           })
@@ -95,7 +104,7 @@ const getComment = async (summaryResultVal: PageSummary[], page: number) => {
             commentId: ele.comment.commentId,
             comment: ele.comment.comment,
             userAvatarUrl: ele.comment.userAvatarUrl,
-            userName: ele.comment.userName,
+            userName: formatUserName(ele.comment.userName),
             createTime: formatCommentTime(ele.comment.createTime),
             starCount: ele.comment.starCount,
             isStared: ele.comment.isStared,
@@ -154,7 +163,7 @@ setTimeout(() => {
   }
 
   // 应用防抖处理
-  const debouncedHandleScroll = debounce(handleScroll, 100) // 250 毫秒防抖
+  const debouncedHandleScroll = debounce(handleScroll, 1000) // 250 毫秒防抖
 
   // 添加事件监听器
   if (iFrame.contentWindow) {
@@ -286,7 +295,7 @@ function changeIframeDivStyle(display: string) {
       <div class="flex flex-col flex-1  grid-right">
         <n-tabs v-model:value="name" type="card" tab-style="min-width: 80px;">
           <n-tab-pane v-for="panel in panels" :key="panel.value" :tab="panel.tab" :name="panel.value">
-            <div class="h-full flex flex-col justify-between">
+            <div class="h-full flex flex-col justify-between pl-2">
               <template v-if="panel.value === 'chat'">
                 <AIChat :pdf-id="pdfId" :page-list="summaryResult"></AIChat>
               </template>
@@ -327,7 +336,7 @@ function changeIframeDivStyle(display: string) {
   position: relative;
 }
 .grid-image {
-  height: 50%;
+  height: 65%;
   width: 100%;
   position: relative;
 }
@@ -423,6 +432,7 @@ function changeIframeDivStyle(display: string) {
 :deep(.n-tab-pane) {
   background-color: #F6F5FC;
   height: 100% !important;
+  min-width: 311px;
   border-radius: 0 0 25px 25px !important;
 }
 
