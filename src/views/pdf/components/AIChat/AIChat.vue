@@ -215,7 +215,9 @@ async function handleDelete(index: number) {
         >
           <div id="image-wrapper" class="relative h-full">
             <div v-for="(dataList, index) of pdfChatList">
-              <div>以下是新对话</div>
+              <div class="flex justify-center text-xs text-gray-400">
+                以下是新对话
+              </div>
               <Message
                 v-for="(item, index) of dataList"
                 :key="index"
